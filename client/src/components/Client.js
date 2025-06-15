@@ -1,5 +1,5 @@
 import React from 'react';
-import Avatar from 'react-avatar';
+/*import Avatar from 'react-avatar';*/
 
 function Client({username}) {
 
