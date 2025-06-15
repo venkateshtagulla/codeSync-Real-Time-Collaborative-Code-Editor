@@ -46,7 +46,7 @@ function Editor({ socketRef, roomId, onCodeChange,theme }) {
     };
 
     init();
-  }, []);
+  }, [onCodeChange, roomId, socketRef]);
 
   // data receive from server
   useEffect(() => {
@@ -60,7 +60,7 @@ function Editor({ socketRef, roomId, onCodeChange,theme }) {
     return () => {
       socketRef.current.off(ACTIONS.CODE_CHANGE);
     };
-  }, [socketRef.current]);
+  }, [socketRef]);
   /*useEffect(() => {
     if (!socketRef.current) return;
   
