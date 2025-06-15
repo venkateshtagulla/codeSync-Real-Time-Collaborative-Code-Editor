@@ -1,0 +1,53 @@
+.codemirror {
+  min-height: "calc(100vh -20px)";
+  font-size: "20px";
+  line-height: "1.6";
+  padding-top: "20px";
+}
+.compile-window {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-height: 40%;
+  background-color: #f8f9fa;
+  box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+  z-index: 10;
+  overflow-y: auto;
+}
+
+.slide-up {
+  transform: translateY(0);
+}
+
+.slide-down {
+  transform: translateY(100%);
+}
+
+.output-box {
+  height: 150px;
+  background-color: #e9ecef;
+  padding: 10px;
+  overflow-y: auto;
+  border: 1px solid #ced4da;
+}
+.custom-hover:hover {
+  background-color: #343a40; /* dark */
+  color: #fff;
+  transform: scale(1.05); /* subtle zoom */
+  transition: all 0.2s ease-in-out;
+}
+::placeholder {
+  color: #ccc; /* Light grey */
+  opacity: 1;  /* Make sure it's not too transparent */
+}
+body {
+  background: linear-gradient(to bottom right, #1a1a1a, #2c2c2c);
+}
+input:focus {
+  border-color: #0d6efd !important; /* Bootstrap primary blue */
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25); /* optional glow */
+}
+
+

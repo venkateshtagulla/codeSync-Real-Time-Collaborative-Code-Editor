@@ -1,0 +1,6 @@
+/* Increase font size for CodeMirror */
+.CodeMirror {
+    font-size: 1.2rem !important; /* Equivalent to Bootstrap fs-4 */
+    line-height: 1.3 !important;
+    height: 100%;
+}
