@@ -50,6 +50,24 @@ function Editor({ socketRef, roomId, onCodeChange,theme }) {
 
   // data receive from server
   useEffect(() => {
+  const socket = socketRef.current; // ✅ Capture ref value early
+
+  if (socket) {
+    socket.on(ACTIONS.CODE_CHANGE, ({ code }) => {
+      if (code !== null) {
+        editorRef.current.setValue(code);
+      }
+    });
+  }
+
+  return () => {
+    if (socket) {
+      socket.off(ACTIONS.CODE_CHANGE); // ✅ Safe now
+    }
+  };
+}, [socketRef]);
+
+  /*useEffect(() => {
     if (socketRef.current) {
       socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
         if (code !== null) {
@@ -60,7 +78,7 @@ function Editor({ socketRef, roomId, onCodeChange,theme }) {
     return () => {
       socketRef.current.off(ACTIONS.CODE_CHANGE);
     };
-  }, [socketRef]);
+  }, [socketRef]);*/
   /*useEffect(() => {
     if (!socketRef.current) return;
   
