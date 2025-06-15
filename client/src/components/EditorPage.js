@@ -40,7 +40,8 @@ function EditorPage() {
   const [selectedLanguage, setSelectedLanguage] = useState("python3");
   const codeRef = useRef(null);
   const [theme, setTheme] = useState("eclipse");
-  const Location = useLocation();
+  const {state} = useLocation();
+  const username = state?.username;
   const navigate = useNavigate();
   const { roomId } = useParams();
 
@@ -50,7 +51,7 @@ function EditorPage() {
   };
 
 
-  useEffect(() => {
+  /*useEffect(() => {
     const init = async () => {
       socketRef.current = await initSocket();
       socketRef.current.on("connect_error", (err) => handleErrors(err));
@@ -74,10 +75,7 @@ function EditorPage() {
             toast.success(`${username} joined the room.`);
           }
           setClients(clients);
-          /*socketRef.current.emit(ACTIONS.SYNC_CODE, {
-            code: codeRef.current,
-            socketId,
-          });*/
+          
           socketRef.current.emit(ACTIONS.SYNC_CODE, {
             code: codeRef.current || "", // Ensure default empty string
             socketId,
@@ -100,9 +98,58 @@ function EditorPage() {
       socketRef.current.off(ACTIONS.JOINED);
       socketRef.current.off(ACTIONS.DISCONNECTED);
     };
-  }, []);
+  }, []);*/
+  useEffect(() => {
+  const handleErrors = (err) => {
+    console.log("Error", err);
+    toast.error("Socket connection failed, Try again later");
+    navigate("/");
+  };
 
-  if (!Location.state) {
+  const init = async () => {
+    socketRef.current = await initSocket();
+    socketRef.current.on("connect_error", handleErrors);
+    socketRef.current.on("connect_failed", handleErrors);
+
+    socketRef.current.emit(ACTIONS.JOIN, {
+      roomId,
+      username,
+    });
+
+    socketRef.current.on(
+      ACTIONS.JOINED,
+      ({ clients, username: joinedUsername, socketId }) => {
+        if (joinedUsername !== username) {
+          toast.success(`${joinedUsername} joined the room.`);
+        }
+        setClients(clients);
+
+        socketRef.current.emit(ACTIONS.SYNC_CODE, {
+          code: codeRef.current || "",
+          socketId,
+        });
+      }
+    );
+
+    socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
+      toast.success(`${username} left the room`);
+      setClients((prev) =>
+        prev.filter((client) => client.socketId !== socketId)
+      );
+    });
+  };
+
+  init();
+
+  return () => {
+    socketRef.current?.disconnect();
+    socketRef.current?.off(ACTIONS.JOINED);
+    socketRef.current?.off(ACTIONS.DISCONNECTED);
+  };
+}, [navigate, roomId, username]); 
+
+
+  if (!state) {
     return <Navigate to="/" />;
   }
 
